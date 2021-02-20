@@ -1,36 +1,58 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI; 
+using TMPro;
 
 public class DashController : MonoBehaviour
 {
 
     PlayerController moveScript;
 
+    [SerializeField] TMP_Text textClock; 
+
     public float dashSpeed;
     public float dashTime;
 
     public float dashCooldown = 5.0f;
-    float timeSinceAction = 0.0f;
+    private float timeSinceAction = 0.0f;
+    private float tempCooldown;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        textClock = GameObject.Find("Text (TMP)").GetComponent<TMP_Text>(); 
+        //textClock = GetComponent<Text>(); 
         moveScript = GetComponent<PlayerController>();
+
+        tempCooldown = dashCooldown;
     }
 
     // Update is called once per frame
     void Update()
-    {
-        timeSinceAction += Time.deltaTime;
-        if (timeSinceAction > dashCooldown)
+    {   
+        tempCooldown -= Time.deltaTime;
+        if (timeSinceAction > tempCooldown)
         {
-            if(Input.GetMouseButtonDown(1))
+            if(Input.GetMouseButtonDown(1) && !moveScript.crouching && !moveScript.lay)
             {
-                timeSinceAction = 0;
+                tempCooldown = dashCooldown;
                 StartCoroutine(Dash());
             }
         }
+        else {
+
+        }
+        if (textClock != null)
+        {
+            if(timeSinceAction < tempCooldown)
+                textClock.text = $"Dash - {(Mathf.Round(tempCooldown * 10f) *0.1f)}";
+            else 
+                textClock.text = "Dash - READY";
+        }
+        
+            
     }
 
     IEnumerator Dash()
@@ -41,7 +63,7 @@ public class DashController : MonoBehaviour
         {
             float directionY = 0;
             moveScript.moveDirection.y = directionY;
-            moveScript.controller.Move(moveScript.moveDirection * dashSpeed * Time.deltaTime);
+            moveScript.playerController.Move(moveScript.moveDirection * dashSpeed * Time.deltaTime);
             yield return null;
         }
     }
