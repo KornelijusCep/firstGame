@@ -35,7 +35,7 @@ public class DashController : MonoBehaviour
         tempCooldown -= Time.deltaTime;
         if (timeSinceAction > tempCooldown)
         {
-            if(Input.GetMouseButtonDown(1) && !moveScript.crouching && !moveScript.lay)
+            if(Input.GetMouseButtonDown(1) && !moveScript.crouching && !moveScript.lay && !moveScript.swimming)
             {
                 tempCooldown = dashCooldown;
                 StartCoroutine(Dash());
@@ -51,7 +51,6 @@ public class DashController : MonoBehaviour
             else 
                 textClock.text = "Dash - READY";
         }
-        
             
     }
 
@@ -67,6 +66,8 @@ public class DashController : MonoBehaviour
             yield return null;
         }
     }
+
+
 
     
 }

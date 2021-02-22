@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -21,7 +22,6 @@ public class PlayerController : MonoBehaviour
     private float doubleJump = 0.5f;
     [SerializeField]
     private float tripleJump = 0.5f;
-    
 
     float changableGravity;
     float changableSpeed;
@@ -50,8 +50,7 @@ public class PlayerController : MonoBehaviour
     private bool canTripleJump = false;
     private float angle = 0f;
     
-    public bool crouching = false, jumping = false, lay = false;
-
+    public bool crouching = false, jumping = false, lay = false, pounding = false, swimming = false;
 
     void Start(){
         playerController = GetComponent<CharacterController>();
@@ -62,9 +61,12 @@ public class PlayerController : MonoBehaviour
 
         changableSpeed = speed;
 
+       
+
         controller_OriginalHeight = playerController.height;
         collider_OriginalHeight = playerCollider.height;
     }
+
 
     void FixedUpdate() {
 
@@ -88,7 +90,7 @@ public class PlayerController : MonoBehaviour
             moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;     
         }
 
-        if(!crouching && !lay)
+        if(!crouching && !lay && !swimming)
         {
             Jumping();
         }
@@ -97,12 +99,14 @@ public class PlayerController : MonoBehaviour
         if(Input.GetKey(KeyCode.Mouse0))
         {
             changableGravity = gravity * 10;
+            pounding = true;
         } 
         else {
             changableGravity = speed;
+            pounding = false;
         } 
 
-        if (Input.GetKey(KeyCode.LeftShift) && playerController.isGrounded && !lay && !crouching)
+        if (Input.GetKey(KeyCode.LeftShift) && playerController.isGrounded && !lay && !crouching && !swimming)
         {
             changableSpeed = speed * 1.5f;
         }
@@ -114,7 +118,7 @@ public class PlayerController : MonoBehaviour
         if(crouching)checkCrouchAbove();
         if(!aboveHead && playerController.isGrounded)
         {
-            if(Input.GetKeyDown(KeyCode.C) && !lay)
+            if(Input.GetKeyDown(KeyCode.C) && !lay && !swimming)
             {
                 if(crouching)
                     crouching = false;
@@ -136,6 +140,31 @@ public class PlayerController : MonoBehaviour
 
         }
 
+        if(swimming == false)
+        {
+            Debug.Log("NOT SWIMING GRAVITY BITCH");
+            directionY -= changableGravity * Time.deltaTime;
+        }           
+        else
+        {
+            if (Input.GetKey(KeyCode.Space))
+            {
+                directionY = 0.5f;
+            }
+            else if (Input.GetKey(KeyCode.LeftControl))
+            {
+                //x = 120f;
+                directionY = -0.5f;
+                //transform.rotation = Quaternion.Euler(x, angle, 0f);
+            }
+            else {
+                //x = 45f;
+                //transform.rotation = Quaternion.Euler(x, angle, 0f);
+                directionY = 0f;
+            }
+            
+        }
+
         // checking if can unLay if laying
         if(lay)checkLayAbove();
         if(!aboveBack && playerController.isGrounded)
@@ -150,8 +179,9 @@ public class PlayerController : MonoBehaviour
                 Lay();
             }
         }
-    
-        directionY -= changableGravity * Time.deltaTime;
+
+       
+
         moveDirection.y = directionY;
         playerController.Move(moveDirection * changableSpeed * Time.deltaTime);
     }
@@ -220,13 +250,9 @@ public class PlayerController : MonoBehaviour
             x = 0f;
             playerController.height = controller_OriginalHeight;
             playerController.radius = 0.5f;
-            transform.rotation = Quaternion.Euler(x, angle, 0f);
-
-           
+            transform.rotation = Quaternion.Euler(x, angle, 0f);    
         }
     }
-
-
 
     void checkCrouchAbove()
     {
@@ -252,10 +278,67 @@ public class PlayerController : MonoBehaviour
             aboveBack = false;
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "BreakableBlock")
+        {
+            if(!playerController.isGrounded && pounding == true)
+            {
+                Destroy(other.gameObject);
+                //Destroy(this.gameObject);
+                //Debug.Log("IT WILL BREAK");
+            }
+        }
+        else if(other.tag == "water")
+        {
+            swimming = true;
+            Swim();
+        }
+        else if(other.tag == "Air")
+        {
+            swimming = false;
+
+            Swim();
+        }
+        if(other.tag == "Portal")
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {/*
+        if(other.tag == "water")
+        {
+            swimming = false;
+            lay = false;
+            Lay();
+        }*/
+
+    }
+
+
+    void Swim()
+    {
+        if(swimming) 
+        {
+            x = 45f;
+            playerController.height = controller_CrouchHeight;
+            playerController.radius = 0.4f;
+            transform.rotation = Quaternion.Euler(x, angle, 0f);
+
+            
+        }
+        else {
+            x = 0f;
+            playerController.height = controller_OriginalHeight;
+            playerController.radius = 0.5f;
+            transform.rotation = Quaternion.Euler(x, angle, 0f);    
+        }
+    }
+
 
 
     
 
-
-    
 }
