@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour
     public Transform rotation; // main player rotation
     public Transform cam; // main camera
     CapsuleCollider playerCollider; // collider
+
+    public int level;
     
     public Vector3 moveDirection; // moving Vector
 
@@ -56,12 +58,14 @@ public class PlayerController : MonoBehaviour
         playerController = GetComponent<CharacterController>();
         playerCollider = GetComponent<CapsuleCollider>();
 
+        level = SceneManager.GetActiveScene().buildIndex;
+
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 
         changableSpeed = speed;
 
-       
+        SaveSystem.SavePlayer(this);
 
         controller_OriginalHeight = playerController.height;
         collider_OriginalHeight = playerCollider.height;
@@ -93,6 +97,11 @@ public class PlayerController : MonoBehaviour
         if(!crouching && !lay && !swimming)
         {
             Jumping();
+        }
+
+        if(Input.GetKey(KeyCode.R))
+        {
+            RestartGame();
         }
 
 
@@ -142,7 +151,6 @@ public class PlayerController : MonoBehaviour
 
         if(swimming == false)
         {
-            Debug.Log("NOT SWIMING GRAVITY BITCH");
             directionY -= changableGravity * Time.deltaTime;
         }           
         else
@@ -180,7 +188,6 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-       
 
         moveDirection.y = directionY;
         playerController.Move(moveDirection * changableSpeed * Time.deltaTime);
@@ -285,8 +292,6 @@ public class PlayerController : MonoBehaviour
             if(!playerController.isGrounded && pounding == true)
             {
                 Destroy(other.gameObject);
-                //Destroy(this.gameObject);
-                //Debug.Log("IT WILL BREAK");
             }
         }
         else if(other.tag == "water")
@@ -300,23 +305,12 @@ public class PlayerController : MonoBehaviour
 
             Swim();
         }
-        if(other.tag == "Portal")
+
+        if(other.tag == "Portal" )
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
     }
-
-    void OnTriggerExit(Collider other)
-    {/*
-        if(other.tag == "water")
-        {
-            swimming = false;
-            lay = false;
-            Lay();
-        }*/
-
-    }
-
 
     void Swim()
     {
@@ -335,6 +329,11 @@ public class PlayerController : MonoBehaviour
             playerController.radius = 0.5f;
             transform.rotation = Quaternion.Euler(x, angle, 0f);    
         }
+    }
+
+
+    public void RestartGame() {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
 

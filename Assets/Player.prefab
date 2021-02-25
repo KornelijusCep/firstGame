@@ -122,17 +122,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec9533c85df151c4bb5df6e27a897f4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerController: {fileID: 0}
+  rotation: {fileID: 0}
   cam: {fileID: 0}
-  controller: {fileID: 3454377367367421732}
+  level: 0
   moveDirection: {x: 0, y: 0, z: 0}
   speed: 10
   gravity: 9.81
   jumpSpeed: 2.5
   doubleJump: 0.75
   tripleJump: 0.75
-  changableGravity: 0
   turnSmoothTime: 0.1
-  m_CrouchHeight: 0.5
+  crouching: 0
+  jumping: 0
+  lay: 0
+  pounding: 0
+  swimming: 0
 --- !u!136 &6263202488123753516
 CapsuleCollider:
   m_ObjectHideFlags: 0

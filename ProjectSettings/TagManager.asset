@@ -9,6 +9,8 @@ TagManager:
   - BreakableBlock
   - Air
   - Portal
+  - Points
+  - Hint
   layers:
   - Default
   - TransparentFX

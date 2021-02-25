@@ -22,7 +22,7 @@ public class DashController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        textClock = GameObject.Find("Text (TMP)").GetComponent<TMP_Text>(); 
+        textClock = GameObject.Find("DashTime").GetComponent<TMP_Text>(); 
         //textClock = GetComponent<Text>(); 
         moveScript = GetComponent<PlayerController>();
 
