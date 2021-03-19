@@ -17,7 +17,6 @@ public class ShowingHints : MonoBehaviour
         if(triggered)
         {
             hints = hints + 1; 
-            Debug.Log(hints);
         }
         if(hints == 1)
             tutorialHint.text = $"Tutorial: Try move camera around with the mouse and walk with W-A-S-D keyboard keys";

@@ -1981,5 +1981,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 604bb36c9fbd1d340b5db6291aabef68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loadButton: {fileID: 0}
+  loadButton: {fileID: 746425585}
   isGameCreated: 0

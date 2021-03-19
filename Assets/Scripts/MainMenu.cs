@@ -8,7 +8,6 @@ using TMPro;
 public class MainMenu : MonoBehaviour
 {
     PlayerData data;
-
     MainMenuData menu;
 
     public Button loadButton;
@@ -34,13 +33,15 @@ public class MainMenu : MonoBehaviour
     {
         isGameCreated = true;
         SaveSystem.SaveMainMenu(this);
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+
+        
     }
 
     public void LoadGame()
     {
         level = data.level;
-
         SceneManager.LoadScene(level);
     }
     

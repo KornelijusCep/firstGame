@@ -8,7 +8,7 @@ public class DashController : MonoBehaviour
 {
 
     PlayerController moveScript;
-
+    public GameObject player;
     [SerializeField] TMP_Text textClock; 
 
     public float dashSpeed;
@@ -17,13 +17,12 @@ public class DashController : MonoBehaviour
     public float dashCooldown = 5.0f;
     private float timeSinceAction = 0.0f;
     private float tempCooldown;
-
+    private float x;
 
     // Start is called before the first frame update
     void Start()
     {
         textClock = GameObject.Find("DashTime").GetComponent<TMP_Text>(); 
-        //textClock = GetComponent<Text>(); 
         moveScript = GetComponent<PlayerController>();
 
         tempCooldown = dashCooldown;
@@ -39,11 +38,10 @@ public class DashController : MonoBehaviour
             {
                 tempCooldown = dashCooldown;
                 StartCoroutine(Dash());
+
             }
         }
-        else {
 
-        }
         if (textClock != null)
         {
             if(timeSinceAction < tempCooldown)
@@ -61,10 +59,12 @@ public class DashController : MonoBehaviour
         while(Time.time < startTime + dashTime)
         {
             float directionY = 0;
+            player.transform.rotation = Quaternion.Euler(45f, moveScript.angle, 0f);
             moveScript.moveDirection.y = directionY;
             moveScript.playerController.Move(moveScript.moveDirection * dashSpeed * Time.deltaTime);
             yield return null;
         }
+        player.transform.rotation = Quaternion.Euler(0f, moveScript.angle, 0f);
     }
 
 

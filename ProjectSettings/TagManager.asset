@@ -11,6 +11,8 @@ TagManager:
   - Portal
   - Points
   - Hint
+  - CameraTrigger1
+  - CameraTrigger2
   layers:
   - Default
   - TransparentFX

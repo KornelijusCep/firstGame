@@ -28,10 +28,13 @@ public class CollectStars : MonoBehaviour
             secretToCollect = 2;
             collectedStars = 0;
         }
+        /* JEI BUTU ANTRAS LYGIS
         if(level == 2)
         {
+            needToCollect = 0;
+            secretToCollect = 0;
             collectedStars = 0;
-        }
+        }*/
     }
 
     // Update is called once per frame
@@ -44,12 +47,12 @@ public class CollectStars : MonoBehaviour
         else {
             if(needToCollect+secretToCollect > collectedStars)
             {
-                leftStarsText.text = $"Portal is opened, but some stars left, so you reset with R";
+                leftStarsText.text = $"Portal is opened, but you left some stars, so you can reset with R";
                 endPortal.SetActive(true);
             }
             else if(needToCollect+secretToCollect == collectedStars)
             {
-                leftStarsText.text = $"I think you good to go now UwU";
+                leftStarsText.text = $"I think you good to go now !!!";
             }
         }
         
